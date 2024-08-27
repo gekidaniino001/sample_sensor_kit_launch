@@ -32,14 +32,14 @@ def get_vehicle_info(context):
     if not gp:
         gp = dict(context.launch_configurations.get("global_params", {}))
     p = {}
-    p["vehicle_length"] = gp["front_overhang"] + gp["wheel_base"] + gp["rear_overhang"]
-    p["vehicle_width"] = gp["wheel_tread"] + gp["left_overhang"] + gp["right_overhang"]
-    p["min_longitudinal_offset"] = -gp["rear_overhang"]
-    p["max_longitudinal_offset"] = gp["front_overhang"] + gp["wheel_base"]
-    p["min_lateral_offset"] = -(gp["wheel_tread"] / 2.0 + gp["right_overhang"])
-    p["max_lateral_offset"] = gp["wheel_tread"] / 2.0 + gp["left_overhang"]
+    p["vehicle_length"] = gp["crop_front_overhang"] + gp["wheel_base"] + gp["crop_rear_overhang"]
+    p["vehicle_width"] = gp["wheel_tread"] + gp["crop_left_overhang"] + gp["crop_right_overhang"]
+    p["min_longitudinal_offset"] = -gp["crop_rear_overhang"]
+    p["max_longitudinal_offset"] = gp["crop_front_overhang"] + gp["wheel_base"]
+    p["min_lateral_offset"] = -(gp["wheel_tread"] / 2.0 + gp["crop_right_overhang"])
+    p["max_lateral_offset"] = gp["wheel_tread"] / 2.0 + gp["crop_left_overhang"]
     p["min_height_offset"] = 0.0
-    p["max_height_offset"] = gp["vehicle_height"]
+    p["max_height_offset"] = gp["crop_vehicle_height"]
     return p
 
 
@@ -144,7 +144,7 @@ def launch_setup(context, *args, **kwargs):
             remappings=[
                 ("~/input/twist", "/sensing/vehicle_velocity_converter/twist_with_covariance"),
                 ("~/input/imu", "/sensing/imu/imu_data"),
-                ("~/input/pointcloud", "mirror_cropped/pointcloud_ex"),
+                ("~/input/pointcloud", "self_cropped/pointcloud_ex"),
                 ("~/output/pointcloud", "rectified/pointcloud_ex"),
             ],
             extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
